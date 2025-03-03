@@ -1,16 +1,31 @@
-# This is a sample Python script.
+import tkinter as tk
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+def on_key_press(event):
+    print(f"Key pressed: {event.keysym}")
+
+def on_left_click(event):
+    print(f"Left click at ({event.x}, {event.y})")
+
+def on_right_click(event):
+    print(f"Right click at ({event.x}, {event.y})")
+
+def on_mouse_motion(event):
+    print(f"Mouse moved to ({event.x}, {event.y})")
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+window = tk.Tk()
+window.title("Library")
+
+# create widgets
+label = tk.Label(text="Welcome!")
+
+# place widgets
+label.place(x=100, y=10)
 
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
+# window.bind("<KeyPress>", on_key_press)
+# window.bind("<Button-1>", on_left_click)
+# window.bind("<Button-3>", on_right_click)
+# window.bind("<Motion>", on_mouse_motion)
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+window.mainloop()
