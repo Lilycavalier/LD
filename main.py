@@ -1,7 +1,8 @@
 import tkinter as tk
 
 def click_on_search(event):
-    print(f"Key pressed: {event.keysym}")
+    sub = entry.get()  # userinput from textfield
+    print("\n".join(s for s in mylist if sub.lower() in s.lower()))  # finds book in mylist
 
 def click_on_field(self, end):
     self.delete(0, end)
