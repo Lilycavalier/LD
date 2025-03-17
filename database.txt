@@ -1,4 +1,5 @@
-Title: Save Me; Author: Mona Kasten; ISBN: 9783736305564; Type: Novel
-Title: Save You; Author: Mona Kasten; ISBN: 0000000; Type: Novel
-Title: The Lord of the Rings; Author: J.R.R. Tolkien; ISBN: 9780544003415; Type: Novel
-Helooooo
+title: save me; author: mona kasten; isbn: 9783736305564; type: novel
+title: the lord of the rings; author: j.r.r. tolkien; isbn: 9780544003415; type: novel
+hellooooo
+
+# store everything in lowercase...ALWAYS

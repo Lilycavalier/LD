@@ -1,17 +1,6 @@
 import tkinter as tk
 
-def click_on_search(event):  # event??
-    entry = entry.get()  # from all four entries??
-    string = "\n".join(s for s in mylist if entry.lower() in s.lower())
-    newstring = string.split(';')
-    for i in range(len(newstring)):
-        print(newstring[i])  # indented??
-    if any(entry in sub for sub in mylist) is False:
-        print("Couldn't find this item")
-        check = input("Do you want to add it to the database?")
-
-
-
+# build window
 window = tk.Tk()
 window.title("Library")
 
@@ -45,22 +34,5 @@ delete_button.place(x=40, y=220)
 search_button.place(x=40, y=260)
 exit_button.place(x=40, y=300)
 
-
-# window.bind("<KeyPress>", on_key_press)
-# entry.bind("<Button-1>", self.delete(0, end))
-# search_button.bind("<Button-1>", click_on_search())
-# window.bind("<Button-3>", on_right_click)
-# window.bind("<Motion>", on_mouse_motion)
-
-with open('database.txt', 'r', encoding="utf-8") as f:
-    mylist = []
-    # add each line as an item (string) in list
-    for line in f:
-        line = line.rstrip("\n")
-        mylist.append(line)
-    # item1 = lst[0].split(';')
-    # print(item1)
-
-
-
+# open window
 window.mainloop()
