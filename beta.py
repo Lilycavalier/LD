@@ -1,6 +1,12 @@
 import tkinter as tk
 
-def click_on_search(event):
+def click_on_search():
+    f = open('database.txt', 'r', encoding="utf-8")
+    mylist = []
+    # add each line as an item (string) in list
+    for line in f:
+        line = line.rstrip("\n")
+        mylist.append(line)
     if entry_title in titles:  # combine all entries and check if in database??
         find =  # index that all entries apply to??
         newstring = mylist[find].split(';')
@@ -8,15 +14,30 @@ def click_on_search(event):
             print(newstring[i])  # indented??
     else:
         print("Couldn't find this item")
+    f.close()
 
-def click_on_add(event):
+def click_on_add():
+    f = open('database.txt', 'r+', encoding="utf-8")
+    mylist = []
+    # add each line as an item (string) in list
+    for line in f:
+        line = line.rstrip("\n")
+        mylist.append(line)
     mylist.append(f"title: {entry_title}; author: {author_entry}; isbn: {isbn_entry}; type: {type_entry}")
     f.write(mylist)  # one line for each item?? how many lines??
+    f.close()
 
-def click_on_delete(event):
+def click_on_delete():
+    f = open('database.txt', 'r+', encoding="utf-8")
+    mylist = []
+    # add each line as an item (string) in list
+    for line in f:
+        line = line.rstrip("\n")
+        mylist.append(line)
     delete =  # index that all entries apply to??
     del mylist[delete]
     f.write(mylist)  # one line for each item?? how many lines??
+    f.close()
 
 
 window = tk.Tk()
@@ -32,9 +53,9 @@ isbn_label = tk.Label(text="ISBN:")
 isbn_entry = tk.Entry()
 type_label = tk.Label(text="Type:")
 type_entry = tk.Entry()
-add_button = tk.Button(window, text='Add Entry', width=16)
-delete_button = tk.Button(window, text='Delete Entry', width=16)
-search_button = tk.Button(window, text='Search', width=16)
+add_button = tk.Button(window, text='Add Entry', width=16, command=click_on_add())
+delete_button = tk.Button(window, text='Delete Entry', width=16, command=click_on_delete())
+search_button = tk.Button(window, text='Search', width=16, command=click_on_search())
 exit_button = tk.Button(window, text='Exit', width=16, command=window.destroy)
 
 # place widgets
@@ -52,10 +73,12 @@ delete_button.place(x=40, y=220)
 search_button.place(x=40, y=260)
 exit_button.place(x=40, y=300)
 
-search_button.bind("<Button-1>", click_on_search())
-add_button.bind("<Button-1>", click_on_add())
-delete_button.bind("<Button-1>", click_on_delete())
+entry_title = title_entry.get().lower()
+entry_author = author_entry.get().lower()
+entry_isbn = isbn_entry.get().lower()
+entry_type = type_entry.get().lower()
 
+"""
 with open('database.txt', 'r+', encoding="utf-8") as f:
     mylist = []
     # add each line as an item (string) in list
@@ -74,9 +97,6 @@ with open('database.txt', 'r+', encoding="utf-8") as f:
             types.append(mylist[i].split(';')[3])
     except:
         pass
-    entry_title = title_entry.get().lower()
-    entry_author = author_entry.get().lower()
-    entry_isbn = isbn_entry.get().lower()
-    entry_type = type_entry.get().lower()
+"""
 
 window.mainloop()
