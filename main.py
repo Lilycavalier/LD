@@ -3,6 +3,7 @@ import tkinter as tk
 # build window
 window = tk.Tk()
 window.title("Library")
+window.geometry("200x350")
 
 # create widgets
 header = tk.Label(text="Welcome!")

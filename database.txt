@@ -2,4 +2,3 @@ title: save me; author: mona kasten; isbn: 9783736305564; type: novel
 title: the lord of the rings; author: j.r.r. tolkien; isbn: 9780544003415; type: novel
 hellooooo
 
-# store everything in lowercase...ALWAYS
