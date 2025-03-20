@@ -50,28 +50,44 @@ def click_on_add():
     # add each line as an item (string) in list
     for line in f:
         line = line.rstrip("\n")
-        mylist.append(line)
+        linelist = line.split(';')
+        mylist.append(linelist)
+    # I don't know why you need the code above, but it doesn't work without
     entry_title = title_entry.get().lower()
     entry_author = author_entry.get().lower()
     entry_isbn = isbn_entry.get().lower()
     entry_type = type_entry.get().lower()
     newitem = f"title: {entry_title}; author: {entry_author}; isbn: {entry_isbn}; type: {entry_type}\n"
-    # mylist.append(f"title: {entry_title}; author: {entry_author}; isbn: {entry_isbn}; type: {entry_type}")
-    f.write(newitem)  # one line for each item?? how many lines??
+    f.write(newitem)
     f.close()
 
 
 def click_on_delete():
-    f = open('database.txt', 'r+', encoding="utf-8")
+    f = open('database.txt', 'r', encoding="utf-8")
     mylist = []
     # add each line as an item (string) in list
     for line in f:
         line = line.rstrip("\n")
         mylist.append(line)
-    # delete =  # index that all entries apply to??
-    # del mylist[delete]
-    f.write(str(mylist))  # one line for each item?? how many lines??
-    f.close()
+    entry_title = title_entry.get().lower()
+    entry_author = author_entry.get().lower()
+    entry_isbn = isbn_entry.get().lower()
+    entry_type = type_entry.get().lower()
+    try:
+        for item in mylist:
+            if entry_title in item and entry_author in item and entry_isbn in item and entry_type in item:
+                delete = mylist.index(item)
+                break
+        del mylist[delete]
+        for i in range(len(mylist)):
+            output = "\n".join(mylist)
+        f.close()
+        delete = open('database.txt', 'w', encoding="utf-8")
+        delete.write(output)
+        delete.close()
+    except:
+        print("this item is not in the library")
+
 
 
 window = tk.Tk()
@@ -132,3 +148,5 @@ with open('database.txt', 'r+', encoding="utf-8") as f:
 """
 
 window.mainloop()
+
+# add windows for messages instead of using console!?
