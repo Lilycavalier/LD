@@ -1,4 +1,5 @@
 import tkinter as tk
+import tkinter.messagebox
 
 
 def click_on_search():
@@ -41,6 +42,7 @@ def click_on_search():
                 break
             # else:
                 # print("Couldn't find this item")  # is not working??
+            # having more than one entry?? do I have to work with elif??
     f.close()
 
 
@@ -149,4 +151,15 @@ with open('database.txt', 'r+', encoding="utf-8") as f:
 
 window.mainloop()
 
-# add windows for messages instead of using console!?
+# add windows for messages instead of using console!? 
+
+# Create a messagebox showinfo 
+def pop_up_message(): 
+    tkinter.messagebox.showinfo("Welcome to GFG.",  "Hi I'm your message") 
+  
+# Create a Button 
+button = Button(root, text="Click Me", command=onClick, height=5, width=10) 
+  
+# Set the position of button
+button.pack(side='bottom') 
+
