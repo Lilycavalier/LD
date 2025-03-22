@@ -32,20 +32,20 @@ def click_on_search():
             if entry_author in field.lower() and entry_author != '':
                 result_index = database.index(item)
                 result_list = database[result_index]
-                for i in range(len(result_list)):
-                    pop_up_message(result_list[i])
+                result_string = f"{result_list[0]}\n {result_list[1]}\n {result_list[2]}\n {result_list[3]}"
+                pop_up_message("results", result_string)
                 break
             if entry_isbn in field.lower() and entry_isbn != '':
                 result_index = database.index(item)
                 result_list = database[result_index]
-                for i in range(len(result_list)):
-                    pop_up_message(result_list[i])
+                result_string = f"{result_list[0]}\n {result_list[1]}\n {result_list[2]}\n {result_list[3]}"
+                pop_up_message("results", result_string)
                 break
             if entry_type in field.lower() and entry_type != '':
                 result_index = database.index(item)
                 result_list = database[result_index]
-                for i in range(len(result_list)):
-                    pop_up_message(result_list[i])
+                result_string = f"{result_list[0]}\n {result_list[1]}\n {result_list[2]}\n {result_list[3]}"
+                pop_up_message("results", result_string)
                 break
             if True:
                 count += 1
@@ -61,18 +61,21 @@ def click_on_add():
     # add each line as a list of fields in list
     for line in f:
         line = line.rstrip("\n")
-        line_list = line.split(';')
-        database.append(line_list)
-    # I don't know why you need the code above, but it doesn't work without
+        database.append(line)
     entry_title = title_entry.get().lower()
     entry_author = author_entry.get().lower()
     entry_isbn = isbn_entry.get().lower()
     entry_type = type_entry.get().lower()
     # get entries and put them together in file format
     item_new = f"title: {entry_title}; author: {entry_author}; isbn: {entry_isbn}; type: {entry_type}\n"
-    f.write(item_new)
-    pop_up_message("message", "successfully added!")
+    database.append(item_new)
+    output = "\n".join(database)
     f.close()
+    # open file again and write the output (database list with added item)
+    add = open('database.txt', 'w', encoding="utf-8")
+    add.write(output)
+    pop_up_message("message", "successfully added!")
+    add.close()
 
 
 def click_on_delete():
@@ -93,8 +96,7 @@ def click_on_delete():
                 delete = database.index(item)
                 break
         del database[delete]
-        for i in range(len(database)):
-            output = "\n".join(database)
+        output = "\n".join(database)
         f.close()
         # open file again and write the output (database list without deleted item)
         delete = open('database.txt', 'w', encoding="utf-8")
