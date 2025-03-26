@@ -2,8 +2,8 @@ import tkinter as tk
 import tkinter.messagebox
 
 
-def pop_up_message(header, info):
-    tkinter.messagebox.showinfo(header, info)
+def pop_up_message(subject, info):
+    tkinter.messagebox.showinfo(subject, info)
 
 
 def click_on_search():
@@ -22,34 +22,30 @@ def click_on_search():
     count = 0
     # loop through entries and see if search requests match up with database information
     for item in database:
-        for field in item:
-            if entry_title in field.lower() and entry_title != '':
+            if entry_title in item[0].lower() or entry_title == '':
+                tt = "match"
+                if entry_author in item[1].lower() or entry_author == '':
+                    au = "match"
+                    if entry_isbn in item[2].lower() or entry_isbn == '':
+                        ib = "match"
+                        if entry_type in item[3].lower() or entry_type == '':
+                            tp = "match"
+                        else:
+                            tp = ""
+                    else:
+                        ib = ""
+                else:
+                    au = ""
+            else:
+                tt = ""
+            if tt == "match" and au == "match" and ib == "match" and tp == "match":
                 result_index = database.index(item)
                 result_list = database[result_index]
                 result_string = f"{result_list[0]}\n {result_list[1]}\n {result_list[2]}\n {result_list[3]}"
                 pop_up_message("results", result_string)
-                break
-            if entry_author in field.lower() and entry_author != '':
-                result_index = database.index(item)
-                result_list = database[result_index]
-                result_string = f"{result_list[0]}\n {result_list[1]}\n {result_list[2]}\n {result_list[3]}"
-                pop_up_message("results", result_string)
-                break
-            if entry_isbn in field.lower() and entry_isbn != '':
-                result_index = database.index(item)
-                result_list = database[result_index]
-                result_string = f"{result_list[0]}\n {result_list[1]}\n {result_list[2]}\n {result_list[3]}"
-                pop_up_message("results", result_string)
-                break
-            if entry_type in field.lower() and entry_type != '':
-                result_index = database.index(item)
-                result_list = database[result_index]
-                result_string = f"{result_list[0]}\n {result_list[1]}\n {result_list[2]}\n {result_list[3]}"
-                pop_up_message("results", result_string)
-                break
-            if True:
+            else:
                 count += 1
-    if count == (len(database)*4):
+    if count == (len(database)):
         pop_up_message("message", "Couldn't find this item")
     f.close()
 
@@ -65,16 +61,20 @@ def click_on_add():
     entry_author = author_entry.get().lower()
     entry_isbn = isbn_entry.get().lower()
     entry_type = type_entry.get().lower()
-    # get entries and put them together in file format
-    item_new = f"title: {entry_title}; author: {entry_author}; isbn: {entry_isbn}; type: {entry_type}\n"
-    database.append(item_new)
-    output = "\n".join(database)
-    f.close()
-    # open file again and write the output (database list with added item)
-    add = open('database.txt', 'w', encoding="utf-8")
-    add.write(output)
-    pop_up_message("message", "successfully added!")
-    add.close()
+    # get entries and put them together in file format (if item not already in database)
+    if f"title: {entry_title}; author: {entry_author}; isbn: {entry_isbn}; type: {entry_type}" not in database:
+        item_new = f"title: {entry_title}; author: {entry_author}; isbn: {entry_isbn}; type: {entry_type}\n"
+        database.append(item_new)
+        output = "\n".join(database)
+        f.close()
+        # open file again and write the output (database list with added item)
+        add = open('database.txt', 'w', encoding="utf-8")
+        add.write(output)
+        pop_up_message("message", "successfully added!")
+        add.close()
+    else:
+        pop_up_message("message", "item is already in database")
+        f.close()
 
 
 def click_on_delete():

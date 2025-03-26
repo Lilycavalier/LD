@@ -1,19 +1,61 @@
 import tkinter as tk
 import tkinter.messagebox
+from tkinter import ttk
 
 
-def pop_up_message(header, info):
-    tkinter.messagebox.showinfo(header, info)
+def select(box):
+    global output
+    output = box.get()
+    pop_up_message("info", "type in your edits now")
+
+
+def pop_up_message(subject, info):
+    tkinter.messagebox.showinfo(subject, info)
+
+
+def open_new_window(data):
+    global database
+    global output
+    # Toplevel object which will be treated as a new window
+    window = tk.Toplevel(main)
+    # sets the title of the Toplevel widget
+    window.title("")
+    # sets the geometry of toplevel
+    window.geometry("300x200")
+
+    text = tk.Label(window, text="Please select the entry you want to edit!")
+    combo_box = ttk.Combobox(window, values=data)
+    select_button = tk.Button(window, text='Select', width=16, command=lambda: select(combo_box))
+
+    for item in database:
+        if output in item:
+            x = database.index(item)
+        else:
+            print("error")
+    # Set default value
+    combo_box.set("Select...")
+
+    # Bind event to selection
+    # combo_box.bind("<<ComboboxSelected>>", select)
+
+    text.place(x=45, y=10)
+    combo_box.place(x=40, y=40)
+    select_button.place(x=45, y=70)
 
 
 def click_on_search():
     f = open('database.txt', 'r', encoding="utf-8")
     database = []
-    # add each line as a list of fields in list
+    # add each line as a list of fields in list (without the label!!)
     for line in f:
         line = line.rstrip("\n")
         line_list = line.split(';')
-        database.append(line_list)
+        line_list_stripped = []
+        for item in line_list:
+            ix = item.index(":") + 2
+            item = item[ix:len(item)]
+            line_list_stripped.append(item)
+        database.append(line_list_stripped)
     entry_title = title_entry.get().lower()
     entry_author = author_entry.get().lower()
     entry_isbn = isbn_entry.get().lower()
@@ -22,36 +64,31 @@ def click_on_search():
     count = 0
     # loop through entries and see if search requests match up with database information
     for item in database:
-        for field in item:
-            if entry_title in field.lower() and entry_title != '':
+            if entry_title in item[0].lower() or entry_title == '':
+                tt = "match"
+                if entry_author in item[1].lower() or entry_author == '':
+                    au = "match"
+                    if entry_isbn in item[2].lower() or entry_isbn == '':
+                        ib = "match"
+                        if entry_type in item[3].lower() or entry_type == '':
+                            tp = "match"
+                        else:
+                            tp = ""
+                    else:
+                        ib = ""
+                else:
+                    au = ""
+            else:
+                tt = ""
+            if tt == "match" and au == "match" and ib == "match" and tp == "match":
                 result_index = database.index(item)
                 result_list = database[result_index]
-                result_string = f"{result_list[0]}\n {result_list[1]}\n {result_list[2]}\n {result_list[3]}"
+                result_string = f"title: {result_list[0]}\n author: {result_list[1]}\n isbn: {result_list[2]}\n type: {result_list[3]}"
                 pop_up_message("results", result_string)
-                break
-            if entry_author in field.lower() and entry_author != '':
-                result_index = database.index(item)
-                result_list = database[result_index]
-                result_string = f"{result_list[0]}\n {result_list[1]}\n {result_list[2]}\n {result_list[3]}"
-                pop_up_message("results", result_string)
-                break
-            if entry_isbn in field.lower() and entry_isbn != '':
-                result_index = database.index(item)
-                result_list = database[result_index]
-                result_string = f"{result_list[0]}\n {result_list[1]}\n {result_list[2]}\n {result_list[3]}"
-                pop_up_message("results", result_string)
-                break
-            if entry_type in field.lower() and entry_type != '':
-                result_index = database.index(item)
-                result_list = database[result_index]
-                result_string = f"{result_list[0]}\n {result_list[1]}\n {result_list[2]}\n {result_list[3]}"
-                pop_up_message("results", result_string)
-                break
-            if True:
+            else:
                 count += 1
-            # possible improvement: don't find a match if some information but not all matches with database information
-    if count == (len(database)*4):
-        pop_up_message("message", "Couldn't find this item")  # better way to do this??
+    if count == (len(database)):
+        pop_up_message("message", "Couldn't find this item")
     f.close()
 
 
@@ -66,16 +103,20 @@ def click_on_add():
     entry_author = author_entry.get().lower()
     entry_isbn = isbn_entry.get().lower()
     entry_type = type_entry.get().lower()
-    # get entries and put them together in file format
-    item_new = f"title: {entry_title}; author: {entry_author}; isbn: {entry_isbn}; type: {entry_type}\n"
-    database.append(item_new)
-    output = "\n".join(database)
-    f.close()
-    # open file again and write the output (database list with added item)
-    add = open('database.txt', 'w', encoding="utf-8")
-    add.write(output)
-    pop_up_message("message", "successfully added!")
-    add.close()
+    # get entries and put them together in file format (if item not already in database)
+    if f"title: {entry_title}; author: {entry_author}; isbn: {entry_isbn}; type: {entry_type}" not in database:
+        item_new = f"title: {entry_title}; author: {entry_author}; isbn: {entry_isbn}; type: {entry_type}\n"
+        database.append(item_new)
+        output = "\n".join(database)
+        f.close()
+        # open file again and write the output (database list with added item)
+        add = open('database.txt', 'w', encoding="utf-8")
+        add.write(output)
+        pop_up_message("message", "successfully added!")
+        add.close()
+    else:
+        pop_up_message("message", "item is already in database")
+        f.close()
 
 
 def click_on_delete():
@@ -107,12 +148,27 @@ def click_on_delete():
         pop_up_message("message", "this item is not in the library")
 
 
-# possible improvement: add third option to edit an entry
+def click_on_edit():
+    f = open('database.txt', 'r', encoding="utf-8")
+    global database
+    database = []
+    # add each line as a list of fields in list (without the label!!)
+    for line in f:
+        line = line.rstrip("\n")
+        line_list = line.split(';')
+        line_list_stripped = []
+        for item in line_list:
+            ix = item.index(":") + 2
+            item = item[ix:len(item)]
+            line_list_stripped.append(item)
+        database.append(line_list_stripped)
+    open_new_window(database)
+    # possible improvement: add edit option to edit entries??
 
 
-window = tk.Tk()
-window.title("Library")
-window.geometry("210x350")
+main = tk.Tk()
+main.title("Library")
+main.geometry("210x400")
 
 # create widgets
 header = tk.Label(text="Welcome!")
@@ -124,10 +180,11 @@ isbn_label = tk.Label(text="ISBN:")
 isbn_entry = tk.Entry()
 type_label = tk.Label(text="Type:")
 type_entry = tk.Entry()
-add_button = tk.Button(window, text='Add Entry', width=16, command=lambda: click_on_add())
-delete_button = tk.Button(window, text='Delete Entry', width=16, command=lambda: click_on_delete())
-search_button = tk.Button(window, text='Search', width=16, command=lambda: click_on_search())
-exit_button = tk.Button(window, text='Exit', width=16, command=window.destroy)
+add_button = tk.Button(main, text='Add Entry', width=16, command=lambda: click_on_add())
+delete_button = tk.Button(main, text='Delete Entry', width=16, command=lambda: click_on_delete())
+search_button = tk.Button(main, text='Search', width=16, command=lambda: click_on_search())
+exit_button = tk.Button(main, text='Exit', width=16, command=main.destroy)
+edit_button = tk.Button(main, text='Edit Entry', width=16, command=lambda: click_on_edit())
 
 # place widgets
 header.place(x=75, y=10)
@@ -143,6 +200,7 @@ add_button.place(x=45, y=180)
 delete_button.place(x=45, y=220)
 search_button.place(x=45, y=260)
 exit_button.place(x=45, y=300)
+edit_button.place(x=45, y=340)
 
 
-window.mainloop()
+main.mainloop()
