@@ -2,11 +2,25 @@ import tkinter as tk
 import tkinter.messagebox
 from tkinter import ttk
 
+global output_select
+global output_title
+global output_author
+global output_isbn
+global output_type
 
-def select(box):
-    global output
-    output = box.get()
-    pop_up_message("info", "type in your edits now")
+
+def select(win, box, e1, e2, e3, e4):
+    global output_select
+    global output_title
+    global output_author
+    global output_isbn
+    global output_type
+    output_select = box.current()
+    output_title = e1.get()
+    output_author = e2.get()
+    output_isbn = e3.get()
+    output_type = e4.get()
+    win.destroy()
 
 
 def pop_up_message(subject, info):
@@ -14,33 +28,42 @@ def pop_up_message(subject, info):
 
 
 def open_new_window(data):
-    global database
-    global output
     # Toplevel object which will be treated as a new window
     window = tk.Toplevel(main)
     # sets the title of the Toplevel widget
     window.title("")
     # sets the geometry of toplevel
-    window.geometry("300x200")
+    window.geometry("280x280")
 
     text = tk.Label(window, text="Please select the entry you want to edit!")
-    combo_box = ttk.Combobox(window, values=data)
-    select_button = tk.Button(window, text='Select', width=16, command=lambda: select(combo_box))
+    combo_box = ttk.Combobox(window, width=30, values=data)
+    text2 = tk.Label(window, text="Now type in your edits...")
+    title_label2 = tk.Label(window, text="Title:")
+    title_entry2 = tk.Entry(window)
+    author_label2 = tk.Label(window, text="Author:")
+    author_entry2 = tk.Entry(window)
+    isbn_label2 = tk.Label(window, text="ISBN:")
+    isbn_entry2 = tk.Entry(window)
+    type_label2 = tk.Label(window, text="Type:")
+    type_entry2 = tk.Entry(window)
+    select_button = tk.Button(window, text='Edit', width=16, command=lambda: select(window, combo_box, title_entry2, author_entry2, isbn_entry2, type_entry2))
 
-    for item in database:
-        if output in item:
-            x = database.index(item)
-        else:
-            print("error")
-    # Set default value
     combo_box.set("Select...")
 
-    # Bind event to selection
-    # combo_box.bind("<<ComboboxSelected>>", select)
+    text.place(x=30, y=10)
+    combo_box.place(x=35, y=40)
+    text2.place(x=65, y=70)
+    title_label2.place(x=40, y=100)
+    title_entry2.place(x=90, y=100)
+    author_label2.place(x=40, y=130)
+    author_entry2.place(x=90, y=130)
+    isbn_label2.place(x=40, y=160)
+    isbn_entry2.place(x=90, y=160)
+    type_label2.place(x=40, y=190)
+    type_entry2.place(x=90, y=190)
+    select_button.place(x=70, y=220)
 
-    text.place(x=45, y=10)
-    combo_box.place(x=40, y=40)
-    select_button.place(x=45, y=70)
+    # window.mainloop()
 
 
 def click_on_search():
@@ -150,7 +173,6 @@ def click_on_delete():
 
 def click_on_edit():
     f = open('database.txt', 'r', encoding="utf-8")
-    global database
     database = []
     # add each line as a list of fields in list (without the label!!)
     for line in f:
@@ -163,6 +185,8 @@ def click_on_edit():
             line_list_stripped.append(item)
         database.append(line_list_stripped)
     open_new_window(database)
+    global output_select
+    print(output_select)
     # possible improvement: add edit option to edit entries??
 
 
