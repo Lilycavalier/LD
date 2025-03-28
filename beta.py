@@ -2,6 +2,11 @@ import tkinter as tk
 import tkinter.messagebox
 from tkinter import ttk
 
+'''
+This version is a little more advanced than the requirements of the assignment.
+It allows you to also edit entries.
+'''
+
 
 def pop_up_message(subject, info):
     tkinter.messagebox.showinfo(subject, info)
