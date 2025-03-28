@@ -2,68 +2,9 @@ import tkinter as tk
 import tkinter.messagebox
 from tkinter import ttk
 
-global output_select
-global output_title
-global output_author
-global output_isbn
-global output_type
-
-
-def select(win, box, e1, e2, e3, e4):
-    global output_select
-    global output_title
-    global output_author
-    global output_isbn
-    global output_type
-    output_select = box.current()
-    output_title = e1.get()
-    output_author = e2.get()
-    output_isbn = e3.get()
-    output_type = e4.get()
-    win.destroy()
-
 
 def pop_up_message(subject, info):
     tkinter.messagebox.showinfo(subject, info)
-
-
-def open_new_window(data):
-    # Toplevel object which will be treated as a new window
-    window = tk.Toplevel(main)
-    # sets the title of the Toplevel widget
-    window.title("")
-    # sets the geometry of toplevel
-    window.geometry("280x280")
-
-    text = tk.Label(window, text="Please select the entry you want to edit!")
-    combo_box = ttk.Combobox(window, width=30, values=data)
-    text2 = tk.Label(window, text="Now type in your edits...")
-    title_label2 = tk.Label(window, text="Title:")
-    title_entry2 = tk.Entry(window)
-    author_label2 = tk.Label(window, text="Author:")
-    author_entry2 = tk.Entry(window)
-    isbn_label2 = tk.Label(window, text="ISBN:")
-    isbn_entry2 = tk.Entry(window)
-    type_label2 = tk.Label(window, text="Type:")
-    type_entry2 = tk.Entry(window)
-    select_button = tk.Button(window, text='Edit', width=16, command=lambda: select(window, combo_box, title_entry2, author_entry2, isbn_entry2, type_entry2))
-
-    combo_box.set("Select...")
-
-    text.place(x=30, y=10)
-    combo_box.place(x=35, y=40)
-    text2.place(x=65, y=70)
-    title_label2.place(x=40, y=100)
-    title_entry2.place(x=90, y=100)
-    author_label2.place(x=40, y=130)
-    author_entry2.place(x=90, y=130)
-    isbn_label2.place(x=40, y=160)
-    isbn_entry2.place(x=90, y=160)
-    type_label2.place(x=40, y=190)
-    type_entry2.place(x=90, y=190)
-    select_button.place(x=70, y=220)
-
-    # window.mainloop()
 
 
 def click_on_search():
@@ -184,10 +125,65 @@ def click_on_edit():
             item = item[ix:len(item)]
             line_list_stripped.append(item)
         database.append(line_list_stripped)
+
+    def open_new_window(data):
+        # Toplevel object which will be treated as a new window
+        window = tk.Toplevel(main)
+        # sets the title of the Toplevel widget
+        window.title("")
+        # sets the geometry of toplevel
+        window.geometry("280x280")
+
+        def select(win, box, e1, e2, e3, e4):
+            f = open('database.txt', 'r', encoding="utf-8")
+            database = []
+            # add each line as an item (string) in list
+            for line in f:
+                line = line.rstrip("\n")
+                database.append(line)
+            # delete this entry from the list
+            del database[box]
+            # get new entries and put them together in file format
+            item_new = f"title: {e1}; author: {e2}; isbn: {e3}; type: {e4}\n"
+            database.append(item_new)
+            output = "\n".join(database)
+            # open file and write the output (database list with edited item)
+            edit = open('database.txt', 'w', encoding="utf-8")
+            edit.write(output)
+            pop_up_message("message", "successfully edited!")
+            edit.close()
+            win.destroy()
+
+        text = tk.Label(window, text="Please select the entry you want to edit!")
+        combo_box = ttk.Combobox(window, width=30, values=data)
+        text2 = tk.Label(window, text="Now type in your edits...")
+        title_label2 = tk.Label(window, text="Title:")
+        title_entry2 = tk.Entry(window)
+        author_label2 = tk.Label(window, text="Author:")
+        author_entry2 = tk.Entry(window)
+        isbn_label2 = tk.Label(window, text="ISBN:")
+        isbn_entry2 = tk.Entry(window)
+        type_label2 = tk.Label(window, text="Type:")
+        type_entry2 = tk.Entry(window)
+        select_button = tk.Button(window, text='Edit', width=16,
+                                  command=lambda: select(window, combo_box.current(), title_entry2.get(),
+                                                         author_entry2.get(), isbn_entry2.get(), type_entry2.get()))
+
+        combo_box.set("Select...")
+
+        text.place(x=30, y=10)
+        combo_box.place(x=35, y=40)
+        text2.place(x=65, y=70)
+        title_label2.place(x=40, y=100)
+        title_entry2.place(x=90, y=100)
+        author_label2.place(x=40, y=130)
+        author_entry2.place(x=90, y=130)
+        isbn_label2.place(x=40, y=160)
+        isbn_entry2.place(x=90, y=160)
+        type_label2.place(x=40, y=190)
+        type_entry2.place(x=90, y=190)
+        select_button.place(x=70, y=220)
     open_new_window(database)
-    global output_select
-    print(output_select)
-    # possible improvement: add edit option to edit entries??
 
 
 main = tk.Tk()
