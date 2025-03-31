@@ -130,6 +130,7 @@ def click_on_edit():
             item = item[ix:len(item)]
             line_list_stripped.append(item)
         database.append(line_list_stripped)
+    # improvement: if entry left blank don't make any changes
 
     def open_new_window(data):
         # Toplevel object which will be treated as a new window
